@@ -97,7 +97,7 @@ class Action(Generic[Inputs, Outputs], metaclass=ActionMeta):
         self.commit_service = commit_service
 
         # Use log for more detailed debug messages
-        self.log = get_logger(service="action", id=self.id)
+        self.log = get_logger(service="action")
 
         # Define kwargs to pass configuration to actions via `action_config`
         if kwargs:
@@ -105,14 +105,20 @@ class Action(Generic[Inputs, Outputs], metaclass=ActionMeta):
 
     @classmethod
     def _get_inputs_type(cls) -> type[Inputs]:
-        i = typing.get_args(cls.__orig_bases__[0])[0]  # pyright: ignore
+        # pylint: disable=no-member
+        if not hasattr(cls, "__orig_bases__"):
+            raise ValueError(f"Action `{cls.__name__}` 没有 __orig_bases__ 属性，不能获取泛型参数")
+        i = typing.get_args(cls.__orig_bases__[0])[0]
         if isinstance(i, TypeVar):
             raise ValueError(f"Action `{cls.id}` does not specify inputs type argument")
         return i
 
     @classmethod
     def _get_outputs_type(cls) -> type[Outputs]:
-        o = typing.get_args(cls.__orig_bases__[0])[1]  # pyright: ignore
+        # pylint: disable=no-member
+        if not hasattr(cls, "__orig_bases__"):
+            raise ValueError(f"Action `{cls.__name__}` 没有 __orig_bases__ 属性，不能获取泛型参数")
+        o = typing.get_args(cls.__orig_bases__[0])[1]
         if isinstance(o, TypeVar):
             raise ValueError(f"Action `{cls.id}` does not specify outputs type argument")
         return o
