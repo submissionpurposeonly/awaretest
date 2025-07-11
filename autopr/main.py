@@ -1,9 +1,13 @@
+import uuid
+from typing import Any, Dict
+from autopr.aware.aware_orchestrator import aware_runtime
+
 import os
 import uuid
 from typing import Type
 
 from git.repo import Repo
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 from .log_config import get_logger
 from .models.events import EventUnion
@@ -88,8 +92,35 @@ class MainService:
         )
 
     async def run(self):
-        # Run the triggers
-        return await self.trigger_service.trigger_event(self.event)
+        self.log.info("AutoPR MainService.run() started.")
+
+        # 为这次运行创建一个包含所有状态的上下文
+        agent_context = {
+            "task_id": str(uuid.uuid4()),
+            "original_prompt": self.event.issue.body if self.event.issue else "No prompt",
+            "replan_needed": False,
+        }
+
+        while True: # 使用循环来支持重试和重新规划
+            try:
+                # 核心业务逻辑
+                self.log.info("Attempting to run trigger_service.trigger_event", context=agent_context)
+                await self.trigger_service.trigger_event(self.event)
+                self.log.info("AutoPR task completed successfully.")
+                break # 成功则跳出循环
+
+            except Exception as e:
+                self.log.error(f"AutoPR workflow caught an exception: {e.__class__.__name__}", exc_info=True)
+
+                # 将异常和上下文交给 AWARE 处理
+                recovery_successful = await aware_runtime.handle_exception(e, agent_context)
+
+                if not recovery_successful or not agent_context.get('replan_needed'):
+                    self.log.error("AWARE could not recover from the exception or indicated task should stop. Aborting.")
+                    break # AWARE 无法恢复或指示停止，跳出循环
+
+                self.log.info("AWARE handled the exception and indicated a re-run/re-plan is needed. Continuing loop.")
+                # 如果 AWARE 处理成功并需要重试/重新规划，循环将继续
 
     def get_repo_path(self):
         raise NotImplementedError
