@@ -23,7 +23,7 @@ class GitHubActionSettings(Settings):
 
         @classmethod
         def parse_env_var(cls, field_name: str, raw_val: str) -> Any:
-            return cls.json_loads(raw_val)  # type: ignore
+            return cls.json_loads(raw_val)  # type: ignore # pylint: disable=no-member
 
 
 class GithubMainService(MainService):
