@@ -7,7 +7,7 @@ import uuid
 from typing import Type
 
 from git.repo import Repo
-from pydantic_settings import BaseSettings
+from pydantic import BaseSettings
 
 from .log_config import get_logger
 from .models.events import EventUnion
