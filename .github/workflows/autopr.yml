@@ -1,15 +1,11 @@
 name: AutoPR
 
 on:
-  push:
-    branches:
-      - main
-  issues:
-    types: [labeled]
+  # 为了测试，我们暂时只保留最直接的触发器
   issue_comment:
     types: [created]
   pull_request:
-    types: [labeled]
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
@@ -19,29 +15,40 @@ permissions:
 jobs:
   autopr:
     runs-on: ubuntu-latest
+    # 只有当评论内容包含 /autopr 时，或者事件是 PR 时才运行
+    if: (github.event_name == 'issue_comment' && contains(github.event.comment.body, '/autopr')) || (github.event_name == 'pull_request')
     steps:
-    - name: Install jq
-      run: sudo apt-get install jq
-    - name: Check if label was added by a collaborator
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        is_collaborator=$(curl -s -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" \
-          "https://api.github.com/repos/${{ github.repository }}/collaborators/${{ github.event.sender.login }}" | jq -r '.message')
+      # 步骤 1: 正确地 Checkout 您 PR 分支的代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-        if [ "$is_collaborator" == "Not Found" ]; then
-          echo "Label not added by a collaborator. Skipping action."
-          exit 78
-        fi
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        ref: main
-        fetch-depth: 1
-    - name: AutoPR
-      uses: irgolic/autopr@main
-      env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        base_branch: main
+      # 步骤 2: 设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 步骤 3: 安装 Poetry
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      # 步骤 4: 安装您项目的所有依赖
+      - name: Install dependencies
+        run: poetry install
+
+      # 步骤 5: 运行您自己的 AutoPR 代码！
+      - name: Run AutoPR
+        env:
+          # 确保您在 GitHub 仓库的 Settings -> Secrets and variables -> Actions 里配置了 OPENAI_API_KEY
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # GITHUB_TOKEN 是自动提供的
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: poetry run python -m autopr.gh_actions_entrypoint
+
+      # 步骤 6: 上传您写论文需要的日志文件
+      - name: Upload Run Log
+        if: always() # 确保即使上一步失败，也总是上传日志
+        uses: actions/upload-artifact@v4
+        with:
+          name: autopr-run-log-for-paper
+          path: .autopr/logs/autopr_run.log
