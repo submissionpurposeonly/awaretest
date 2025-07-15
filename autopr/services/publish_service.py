@@ -756,7 +756,9 @@ Pull Request: {pr_link}
 
         # 第一步：先用简单的 if/else 决定 issue_link 的值
         if self.issue is not None:
-            issue_link_value = f"https://github.com/{self.owner}/{self.repo_name}/issues/{self.issue.number}"
+            issue_link_value = (
+                f"https://github.com/{self.owner}/{self.repo_name}/issues/{self.issue.number}"
+            )
         else:
             issue_link_value = "None"
         # 第二步：再把这个简单的值赋给字典
@@ -764,7 +766,9 @@ Pull Request: {pr_link}
 
         # 第三步：用同样的方法处理 pr_link
         if self.pr_number is not None:
-            pr_link_value = f"https://github.com/{self.owner}/{self.repo_name}/pull/{self.pr_number}"
+            pr_link_value = (
+                f"https://github.com/{self.owner}/{self.repo_name}/pull/{self.pr_number}"
+            )
         else:
             pr_link_value = "None"
         # 第四步：赋给字典
