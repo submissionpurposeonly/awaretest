@@ -754,15 +754,15 @@ Pull Request: {pr_link}
         shield = self._get_shield(success=False)
         kwargs["shield"] = shield
         if self.issue is not None:
-            kwargs[
-                "issue_link"
-            ] = f"https://github.com/{self.owner}/{self.repo_name}/issues/{self.issue.number}"
+            kwargs["issue_link"] = (
+            f"https://github.com/{self.owner}/{self.repo_name}/issues/{self.issue.number}"
+            )
         else:
             kwargs["issue_link"] = "None"
         if self.pr_number is not None:
-            kwargs[
-                "pr_link"
-            ] = f"https://github.com/{self.owner}/{self.repo_name}/pull/{self.pr_number}"
+            kwargs["pr_link"] = (
+            f"https://github.com/{self.owner}/{self.repo_name}/pull/{self.pr_number}"
+            )
         else:
             kwargs["pr_link"] = "None"
         return super()._build_issue_template_link(**kwargs)

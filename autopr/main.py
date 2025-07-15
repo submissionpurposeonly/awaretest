@@ -113,9 +113,9 @@ class MainService:
             owner=self.owner,
             repo_name=self.repo_name,
             issue=self.event.issue,
-            pr_number=self.event.pull_request.number
-            if self.event.pull_request is not None
-            else None,
+            pr_number=(
+                self.event.pull_request.number if self.event.pull_request is not None else None
+            ),
             base_branch=self.base_branch_name,
             head_branch=self.branch_name,
             loading_gif_url=self.settings.loading_gif_url,
