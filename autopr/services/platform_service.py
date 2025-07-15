@@ -724,7 +724,7 @@ class GitHubPlatformService(PlatformService):
                 issue=self._extract_issue(event["issue"]) if "issue" in event else None,
                 label=event["label"]["name"],
             )
-        if event["action"] == "comment":
+        if event["action"] == "created":
             return CommentEvent(
                 pull_request=self._extract_pull_request(event["issue"]["pull_request"]),
                 issue=self._extract_issue(event["issue"]),
