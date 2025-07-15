@@ -3,15 +3,15 @@
 <!-- Living README Summary -->
 ## 🌳 Living Summary
 
-This folder contains a collection of Python files that implement various services and classes for managing and running actions in an automated PR workflow. These services include the `ActionService` for finding, instantiating, and running actions, the `CacheService` for storing and retrieving key-value pairs in a cache directory, the `CommitService` for handling Git-related operations, the `DiffService` for getting and applying diffs, the `PlatformService` for interacting with the GitHub platform, the `PublishService` for publishing updates to a pull request description, the `TriggerService` for handling triggers for events, the `Utils` module for formatting and truncating data, and the `WorkflowService` for executing workflows and actions based on their IDs.
+This folder contains Python modules for managing automated actions in a pull request workflow. It includes classes for services like ActionService for running actions, CacheService for caching data, CommitService for managing Git commits, and PlatformService for interacting with platforms like GitHub. Other services handle triggers, publishing updates, applying and getting diffs, and executing workflows based on specified actions. These modules work together to automate and manage various aspects of a pull request workflow efficiently.
 
 
-### [`__init__.py`](https://github.com/irgolic/AutoPR/blob/1d818f4daeb78662b7d831d89a73d3258bb95e2f/./autopr/services/__init__.py)
+### [`__init__.py`](https://github.com/submissionpurposeonly/awaretest/blob/7827ac89c146b063711453fd33b36658f1ad4ab0/./autopr/services/__init__.py)
 
 This file is empty.  
 
 
-### [`action_service.py`](https://github.com/irgolic/AutoPR/blob/1d818f4daeb78662b7d831d89a73d3258bb95e2f/./autopr/services/action_service.py)
+### [`action_service.py`](https://github.com/submissionpurposeonly/awaretest/blob/7827ac89c146b063711453fd33b36658f1ad4ab0/./autopr/services/action_service.py)
 
 💼 This file contains the implementation of the `ActionService` class, which is responsible for managing and running actions in an automated PR workflow.  
 💧 The `ActionService` class provides methods for finding, instantiating, and running actions based on their configurations.  
@@ -25,7 +25,7 @@ This file is empty.
 ⚠️ If an action fails to run, an error message is displayed and the exception is raised.  
 
 
-### [`cache_service.py`](https://github.com/irgolic/AutoPR/blob/1d818f4daeb78662b7d831d89a73d3258bb95e2f/./autopr/services/cache_service.py)
+### [`cache_service.py`](https://github.com/submissionpurposeonly/awaretest/blob/7827ac89c146b063711453fd33b36658f1ad4ab0/./autopr/services/cache_service.py)
 
 📁 The file contains a class called `CacheService` and its subclass `ShelveCacheService`.    
 📝 The purpose of the file is to provide a caching service using the `shelve` module.    
@@ -39,20 +39,17 @@ This file is empty.
 🔒 The cache files are opened and closed using the `shelve` module.  
 
 
-### [`commit_service.py`](https://github.com/irgolic/AutoPR/blob/1d818f4daeb78662b7d831d89a73d3258bb95e2f/./autopr/services/commit_service.py)
+### [`commit_service.py`](https://github.com/submissionpurposeonly/awaretest/blob/7827ac89c146b063711453fd33b36658f1ad4ab0/./autopr/services/commit_service.py)
 
-📝 This file contains a class called `CommitService` which provides methods for creating branches, committing changes, and pushing them to a Git repository.  
-🚀 The purpose of this file is to handle the Git-related operations necessary for managing commits and branches.  
-🌿 The `CommitService` class ensures that there is always a commit on the branch.  
-⚙️ It provides methods for overwriting a new branch, ensuring a branch exists, checking if unstaged changes exist, committing changes, and getting the status of changes on the branch.  
-📚 The class uses the `git` module to interact with the Git repository.  
-📝 The `overwrite_new_branch` method creates a new branch, deletes an existing branch if it exists, and checks out the base branch.  
-🔄 The `ensure_branch_exists` method checks if a branch exists, and if not, creates a new branch or checks out an existing remote branch.  
-✅ The `unstaged_changes_exist` method checks if there are any unstaged changes on the branch.  
-🔀 The `commit` method adds and commits changes, and can also push the branch to the remote repository.  
+🔍 The file defines a `CommitService` class for managing Git commits and branches.    
+🔧 The class provides methods for creating branches, committing changes, and pushing commits to the repository.    
+🌿 It ensures there is always a commit on the branch and handles different scenarios like existing branches and unstaged changes.    
+🔄 Methods like `overwrite_new_branch` and `ensure_branch_exists` manage branch creation and existence checks.    
+📝 The `commit` method allows committing changes with optional push to the remote repository.    
+📊 The `get_changes_status` method determines the status of changes on the branch based on comparisons with the base branch.    
 
 
-### [`diff_service.py`](https://github.com/irgolic/AutoPR/blob/1d818f4daeb78662b7d831d89a73d3258bb95e2f/./autopr/services/diff_service.py)
+### [`diff_service.py`](https://github.com/submissionpurposeonly/awaretest/blob/7827ac89c146b063711453fd33b36658f1ad4ab0/./autopr/services/diff_service.py)
 
 📝 The file contains a class called `DiffService` which is a service for getting and applying diffs.  
 📝 Diffs are represented as `DiffStr`, which is an alias for `str`.  
@@ -66,7 +63,7 @@ This file is empty.
 📝 The file includes a logger for debugging purposes.  
 
 
-### [`platform_service.py`](https://github.com/irgolic/AutoPR/blob/1d818f4daeb78662b7d831d89a73d3258bb95e2f/./autopr/services/platform_service.py)
+### [`platform_service.py`](https://github.com/submissionpurposeonly/awaretest/blob/7827ac89c146b063711453fd33b36658f1ad4ab0/./autopr/services/platform_service.py)
 
 📄 This file contains two classes: `PlatformService` and `GitHubPlatformService`.  
 🔧 `PlatformService` is a base class for making API calls to a platform (e.g., GitHub).  
@@ -80,25 +77,26 @@ This file is empty.
 🌐 The purpose of this file is to provide a service for interacting with the GitHub platform, including creating and managing pull requests and issues.  
 
 
-### [`publish_service.py`](https://github.com/irgolic/AutoPR/blob/1d818f4daeb78662b7d831d89a73d3258bb95e2f/./autopr/services/publish_service.py)
+### [`publish_service.py`](https://github.com/submissionpurposeonly/awaretest/blob/7827ac89c146b063711453fd33b36658f1ad4ab0/./autopr/services/publish_service.py)
 
 💡 This file contains the implementation of a service for publishing updates to a pull request description. It includes classes like `CodeBlock` and `UpdateSection` to represent different elements in the description. The main class is `PublishService`, which provides methods for updating and finalizing the pull request description. There are also subclasses `GitHubPublishService` and `DummyPublishService` for specific platforms.  
 
 
-### [`trigger_service.py`](https://github.com/irgolic/AutoPR/blob/1d818f4daeb78662b7d831d89a73d3258bb95e2f/./autopr/services/trigger_service.py)
+### [`trigger_service.py`](https://github.com/submissionpurposeonly/awaretest/blob/7827ac89c146b063711453fd33b36658f1ad4ab0/./autopr/services/trigger_service.py)
 
-📚 This file contains a class called `TriggerService` which handles triggers for events.   
-🔀 Triggers are objects that match specific events and execute workflows or actions in response.   
-🔁 The `TriggerService` class has methods for handling triggers, executing workflows, and finalizing triggers.   
-📣 Triggers and their associated contexts are gathered and processed to determine which workflows or actions to execute.   
-🎬 The starting context for each trigger is logged and published.   
-🏁 The final context after executing the workflow or action is also logged and published.   
-🚀 The `trigger_event` method is the main entry point for triggering events and executing the associated workflows or actions.   
-💡 The `finalize_trigger` method handles the finalization of triggers, including committing changes and merging PRs.   
-📝 The file also includes helper methods for getting IDs and names for executables.  
+🔍 This file defines a class `TriggerService` that handles triggers for workflow executions.    
+🔄 Triggers are initialized with specific services like `PublishService`, `WorkflowService`, and `CommitService`.    
+🔧 It contains methods to handle different types of executables and events.    
+📝 Triggers and their associated contexts are processed for specific events.    
+🚀 Asynchronous handling of triggers is done through coroutines.    
+🔚 Triggers are finalized, exceptions are managed, and PRs are managed based on changes.    
+📣 Each trigger execution is logged with relevant information.    
+🛠️ Errors during trigger execution are caught and logged.    
+📊 Contexts are updated and published at different stages of trigger execution.    
+🎯 The main goal is to manage and execute workflows triggered by specific events.    
 
 
-### [`utils.py`](https://github.com/irgolic/AutoPR/blob/1d818f4daeb78662b7d831d89a73d3258bb95e2f/./autopr/services/utils.py)
+### [`utils.py`](https://github.com/submissionpurposeonly/awaretest/blob/7827ac89c146b063711453fd33b36658f1ad4ab0/./autopr/services/utils.py)
 
 💡 This file contains functions for formatting and truncating data for publishing.   
 💡 The `truncate_strings` function truncates strings to a specified length and adds an ellipsis if necessary.   
@@ -108,7 +106,7 @@ This file is empty.
 💡 The functions are designed to be used together to prepare data for display or publication.  
 
 
-### [`workflow_service.py`](https://github.com/irgolic/AutoPR/blob/1d818f4daeb78662b7d831d89a73d3258bb95e2f/./autopr/services/workflow_service.py)
+### [`workflow_service.py`](https://github.com/submissionpurposeonly/awaretest/blob/7827ac89c146b063711453fd33b36658f1ad4ab0/./autopr/services/workflow_service.py)
 
 📄 This file contains the implementation of a WorkflowService class.   
 🌊 The WorkflowService class is responsible for executing workflows and actions based on their IDs.   
