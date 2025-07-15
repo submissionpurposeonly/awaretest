@@ -13,10 +13,11 @@ permissions:
 jobs:
   autopr:
     runs-on: ubuntu-latest
-    # 只有当评论内容包含 /autopr，并且评论者是仓库所有者时，才运行
-    if: github.event.comment.user.login == github.repository_owner && contains(github.event.comment.body, '/autopr')
+    # 只有当评论内容包含 /autopr 时才运行
+    if: contains(github.event.comment.body, '/autopr')
     steps:
       # 步骤 1: 正确地 Checkout 您 PR 分支的代码
+      # 注意：这里不再有 ref: main
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -38,16 +39,16 @@ jobs:
         run: poetry install
 
       # 步骤 5: 运行您自己的 AutoPR 代码！
+      # 注意：这里不再是 uses: irgolic/autopr@main
       - name: Run AutoPR
         env:
-          # 确保您在 GitHub 仓库的 Settings -> Secrets and variables -> Actions 里配置了 OPENAI_API_KEY
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: poetry run python -m autopr.gh_actions_entrypoint
 
       # 步骤 6: 上传您写论文需要的日志文件
       - name: Upload Run Log
-        if: always() # 确保即使上一步失败，也总是上传日志
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: autopr-run-log
