@@ -753,18 +753,23 @@ Pull Request: {pr_link}
     def _build_issue_template_link(self, **kwargs):
         shield = self._get_shield(success=False)
         kwargs["shield"] = shield
+
+        # 第一步：先用简单的 if/else 决定 issue_link 的值
         if self.issue is not None:
-            kwargs["issue_link"] = (
-            f"https://github.com/{self.owner}/{self.repo_name}/issues/{self.issue.number}"
-            )
+            issue_link_value = f"https://github.com/{self.owner}/{self.repo_name}/issues/{self.issue.number}"
         else:
-            kwargs["issue_link"] = "None"
+            issue_link_value = "None"
+        # 第二步：再把这个简单的值赋给字典
+        kwargs["issue_link"] = issue_link_value
+
+        # 第三步：用同样的方法处理 pr_link
         if self.pr_number is not None:
-            kwargs["pr_link"] = (
-            f"https://github.com/{self.owner}/{self.repo_name}/pull/{self.pr_number}"
-            )
+            pr_link_value = f"https://github.com/{self.owner}/{self.repo_name}/pull/{self.pr_number}"
         else:
-            kwargs["pr_link"] = "None"
+            pr_link_value = "None"
+        # 第四步：赋给字典
+        kwargs["pr_link"] = pr_link_value
+
         return super()._build_issue_template_link(**kwargs)
 
     def _build_bodies(
