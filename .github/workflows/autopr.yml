@@ -17,7 +17,6 @@ jobs:
     if: contains(github.event.comment.body, '/autopr')
     steps:
       # 步骤 1: 正确地 Checkout 您 PR 分支的代码
-      # 注意：这里不再有 ref: main
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -39,7 +38,6 @@ jobs:
         run: poetry install
 
       # 步骤 5: 运行您自己的 AutoPR 代码！
-      # 注意：这里不再是 uses: irgolic/autopr@main
       - name: Run AutoPR
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
