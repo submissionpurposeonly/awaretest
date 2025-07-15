@@ -716,13 +716,15 @@ class GitHubPlatformService(PlatformService):
             )
         if event["action"] == "labeled":
             return LabelEvent(
-                pull_request=self._extract_pull_request(event["pull_request"])
-                if "pull_request" in event
-                else None,
+                pull_request=(
+                    self._extract_pull_request(event["pull_request"])
+                    if "pull_request" in event
+                    else None
+                ),
                 issue=self._extract_issue(event["issue"]) if "issue" in event else None,
                 label=event["label"]["name"],
             )
-        if event["action"] == "comment":
+        if event["action"] == "created":
             return CommentEvent(
                 pull_request=self._extract_pull_request(event["issue"]["pull_request"]),
                 issue=self._extract_issue(event["issue"]),
