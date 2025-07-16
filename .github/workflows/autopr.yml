@@ -1,37 +1,15 @@
 name: AutoPR
 
 on:
-  issue_comment:
-    types: [created]
-
-permissions:
-  contents: write
-  issues: write
-  pull-requests: write
+  issues:
+    types: [opened, edited]
 
 jobs:
-  autopr:
+  run_autopr:
     runs-on: ubuntu-latest
-    if: contains(github.event.comment.body, '/autopr')
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.issue.pull_request.url && fromJson(toJSON(github.event.issue.pull_request)).head.ref || '' }}
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-
-      - name: Install dependencies
-        run: poetry install
-
       - name: Run AutoPR
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: poetry run python -m autopr.gh_actions_entrypoint
+        # 这是关键，我们使用项目作者推荐的 v0.1.2 版本，这个版本会自动根据Issue生成PR
+        uses: docker://ghcr.io/irgolic/autopr:v0.1.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
